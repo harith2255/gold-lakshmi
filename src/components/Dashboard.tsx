@@ -1,6 +1,27 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import React, { useState } from 'react';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from './ui/card';
 import { Button } from './ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from './ui/dialog';
+import { Label } from './ui/label';
+import { Input } from './ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from './ui/select';
 import {
   LineChart,
   Line,
@@ -12,7 +33,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer,
+  ResponsiveContainer
 } from 'recharts';
 import {
   TrendingUp,
@@ -24,6 +45,7 @@ import {
   UserPlus,
   FilePlus,
   BarChart3,
+  Upload
 } from 'lucide-react';
 import { Badge } from './ui/badge';
 
@@ -32,55 +54,27 @@ interface DashboardProps {
 }
 
 export function Dashboard({ selectedBranch }: DashboardProps) {
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isNewLoanDialogOpen, setIsNewLoanDialogOpen] = useState(false);
+
+  // 👇 Dummy Add Customer Function
+  const handleAddCustomer = () => {
+    console.log('Customer Added!');
+    setIsAddDialogOpen(false);
+  };
+
+  const handleCreateLoan = () => {
+      console.log('Loan Created!');
+      setIsNewLoanDialogOpen(false);
+    };
+
   const kpiData = [
-    {
-      title: 'Active Loans',
-      value: '1,247',
-      change: '+12.5%',
-      trend: 'up',
-      icon: FileText,
-      color: 'blue',
-    },
-    {
-      title: 'Closed Loans',
-      value: '3,891',
-      change: '+8.3%',
-      trend: 'up',
-      icon: FileText,
-      color: 'green',
-    },
-    {
-      title: 'Total Pledged Gold',
-      value: '2,451 kg',
-      change: '+15.2%',
-      trend: 'up',
-      icon: Coins,
-      color: 'yellow',
-    },
-    {
-      title: 'Interest Income',
-      value: '₹45.2L',
-      change: '+9.8%',
-      trend: 'up',
-      icon: TrendingUp,
-      color: 'purple',
-    },
-    {
-      title: 'Total Customers',
-      value: '4,523',
-      change: '+18.1%',
-      trend: 'up',
-      icon: Users,
-      color: 'indigo',
-    },
-    {
-      title: 'Overdue Loans',
-      value: '127',
-      change: '-5.2%',
-      trend: 'down',
-      icon: AlertCircle,
-      color: 'red',
-    },
+    { title: 'Active Loans', value: '1,247', change: '+12.5%', trend: 'up', icon: FileText, color: 'blue' },
+    { title: 'Closed Loans', value: '3,891', change: '+8.3%', trend: 'up', icon: FileText, color: 'green' },
+    { title: 'Total Pledged Gold', value: '2,451 kg', change: '+15.2%', trend: 'up', icon: Coins, color: 'yellow' },
+    { title: 'Interest Income', value: '₹45.2L', change: '+9.8%', trend: 'up', icon: TrendingUp, color: 'purple' },
+    { title: 'Total Customers', value: '4,523', change: '+18.1%', trend: 'up', icon: Users, color: 'indigo' },
+    { title: 'Overdue Loans', value: '127', change: '-5.2%', trend: 'down', icon: AlertCircle, color: 'red' },
   ];
 
   const disbursementData = [
@@ -101,41 +95,11 @@ export function Dashboard({ selectedBranch }: DashboardProps) {
   ];
 
   const recentActivities = [
-    {
-      id: 1,
-      type: 'loan',
-      message: 'New loan disbursed to Rajesh Kumar',
-      amount: '₹2,50,000',
-      time: '10 mins ago',
-    },
-    {
-      id: 2,
-      type: 'payment',
-      message: 'Payment received from Priya Sharma',
-      amount: '₹45,000',
-      time: '25 mins ago',
-    },
-    {
-      id: 3,
-      type: 'customer',
-      message: 'New customer registered - Amit Patel',
-      amount: '',
-      time: '1 hour ago',
-    },
-    {
-      id: 4,
-      type: 'valuation',
-      message: 'Gold valuation completed for Sunita Devi',
-      amount: '₹3,75,000',
-      time: '2 hours ago',
-    },
-    {
-      id: 5,
-      type: 'alert',
-      message: 'Loan overdue alert - Account #GL12345',
-      amount: '',
-      time: '3 hours ago',
-    },
+    { id: 1, message: 'New loan disbursed to Rajesh Kumar', amount: '₹2,50,000', time: '10 mins ago' },
+    { id: 2, message: 'Payment received from Priya Sharma', amount: '₹45,000', time: '25 mins ago' },
+    { id: 3, message: 'New customer registered - Amit Patel', amount: '', time: '1 hour ago' },
+    { id: 4, message: 'Gold valuation completed for Sunita Devi', amount: '₹3,75,000', time: '2 hours ago' },
+    { id: 5, message: 'Loan overdue alert - Account #GL12345', amount: '', time: '3 hours ago' },
   ];
 
   const getIconColor = (color: string) => {
@@ -156,19 +120,206 @@ export function Dashboard({ selectedBranch }: DashboardProps) {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-gray-900 dark:text-white">Dashboard</h1>
-          <p className="text-gray-500 dark:text-gray-400">
-            Welcome back! Here's what's happening today.
-          </p>
+          <p className="text-gray-500 dark:text-gray-400">Welcome back! Here's what's happening today.</p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <Button className="bg-blue-600 hover:bg-blue-700">
-            <UserPlus className="w-4 h-4 mr-2" />
-            Add Customer
-          </Button>
-          <Button className="bg-yellow-600 hover:bg-yellow-700">
-            <FilePlus className="w-4 h-4 mr-2" />
-            New Loan
-          </Button>
+          {/* 🔹 Add Customer Dialog Button */}
+          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-blue-600 hover:bg-blue-700">
+                <UserPlus className="w-4 h-4 mr-2" />
+                Add Customer
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Add New Customer</DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-4 mt-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="fullName">Full Name *</Label>
+                    <Input id="fullName" placeholder="Enter full name" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="mobile">Mobile Number *</Label>
+                    <Input id="mobile" placeholder="+91 9876543210" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email Address</Label>
+                    <Input id="email" type="email" placeholder="email@example.com" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="dob">Date of Birth *</Label>
+                    <Input id="dob" type="date" />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="address">Address *</Label>
+                  <Input id="address" placeholder="Enter complete address" />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="pan">PAN Number *</Label>
+                    <Input id="pan" placeholder="ABCDE1234F" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="aadhaar">Aadhaar Number *</Label>
+                    <Input id="aadhaar" placeholder="1234 5678 9012" />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="branch">Branch *</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select branch" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="branch-1">Mumbai - Andheri</SelectItem>
+                      <SelectItem value="branch-2">Delhi - Karol Bagh</SelectItem>
+                      <SelectItem value="branch-3">Bangalore - Jayanagar</SelectItem>
+                      <SelectItem value="branch-4">Chennai - T Nagar</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>KYC Documents</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
+                      <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Upload PAN Card</p>
+                    </div>
+                    <div className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
+                      <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Upload Aadhaar</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-3 pt-4">
+                  <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleAddCustomer} className="bg-blue-600 hover:bg-blue-700">
+                    Add Customer
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog open={isNewLoanDialogOpen} onOpenChange={setIsNewLoanDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button className="bg-yellow-600 hover:bg-yellow-700">
+                        <FilePlus className="w-4 h-4 mr-2" />
+                        Create Loan
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle>Create New Loan Account</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4 mt-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="loanCustomer">Select Customer *</Label>
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Search customer" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="cust1">Rajesh Kumar (CUST001)</SelectItem>
+                              <SelectItem value="cust2">Priya Sharma (CUST002)</SelectItem>
+                              <SelectItem value="cust3">Sunita Devi (CUST004)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+          
+                        <div className="space-y-2">
+                          <Label htmlFor="valuationRef">Valuation Reference *</Label>
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select valuation" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="val1">VAL001 - 50g 22K Gold (₹3,12,500)</SelectItem>
+                              <SelectItem value="val2">VAL002 - 30g 24K Gold (₹1,87,500)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+          
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="loanAmount">Loan Amount (₹) *</Label>
+                            <Input id="loanAmount" type="number" placeholder="250000" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="interestRate">Interest Rate (% p.a.) *</Label>
+                            <Input id="interestRate" type="number" step="0.1" placeholder="12" />
+                          </div>
+                        </div>
+          
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="tenure">Tenure (months) *</Label>
+                            <Select>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select tenure" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="3">3 Months</SelectItem>
+                                <SelectItem value="6">6 Months</SelectItem>
+                                <SelectItem value="12">12 Months</SelectItem>
+                                <SelectItem value="24">24 Months</SelectItem>
+                                <SelectItem value="36">36 Months</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="disbursementMode">Disbursement Mode *</Label>
+                            <Select>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select mode" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="cash">Cash</SelectItem>
+                                <SelectItem value="bank">Bank Transfer</SelectItem>
+                                <SelectItem value="cheque">Cheque</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+          
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="disbursementDate">Disbursement Date *</Label>
+                            <Input id="disbursementDate" type="date" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="purpose">Loan Purpose</Label>
+                            <Input id="purpose" placeholder="e.g., Business, Medical" />
+                          </div>
+                        </div>
+          
+                        <div className="flex justify-end gap-3 pt-4">
+                          <Button variant="outline" onClick={() => setIsNewLoanDialogOpen(false)}>
+                            Cancel
+                          </Button>
+                          <Button onClick={handleCreateLoan} className="bg-yellow-600 hover:bg-yellow-700">
+                            Create Loan
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+
           <Button variant="outline">
             <BarChart3 className="w-4 h-4 mr-2" />
             Reports
@@ -194,9 +345,7 @@ export function Dashboard({ selectedBranch }: DashboardProps) {
                         <TrendingDown className="w-3 h-3 text-red-500" />
                       )}
                       <span
-                        className={`text-xs ${
-                          kpi.trend === 'up' ? 'text-green-500' : 'text-red-500'
-                        }`}
+                        className={`text-xs ${kpi.trend === 'up' ? 'text-green-500' : 'text-red-500'}`}
                       >
                         {kpi.change}
                       </span>
@@ -214,7 +363,6 @@ export function Dashboard({ selectedBranch }: DashboardProps) {
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Loan Disbursement Trend */}
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Loan Disbursement Trend (₹ Lakhs)</CardTitle>
@@ -227,20 +375,12 @@ export function Dashboard({ selectedBranch }: DashboardProps) {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="amount"
-                  stroke="#3b82f6"
-                  strokeWidth={2}
-                  dot={{ fill: '#3b82f6', r: 4 }}
-                  activeDot={{ r: 6 }}
-                />
+                <Line type="monotone" dataKey="amount" stroke="#3b82f6" strokeWidth={2} dot />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        {/* Loan Status Distribution */}
         <Card>
           <CardHeader>
             <CardTitle>Loan Status Distribution</CardTitle>
@@ -252,14 +392,12 @@ export function Dashboard({ selectedBranch }: DashboardProps) {
                   data={loanStatusData}
                   cx="50%"
                   cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   outerRadius={80}
-                  fill="#8884d8"
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   dataKey="value"
                 >
                   {loanStatusData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
+                    <Cell key={index} fill={entry.color} />
                   ))}
                 </Pie>
                 <Tooltip />
@@ -277,20 +415,13 @@ export function Dashboard({ selectedBranch }: DashboardProps) {
         <CardContent>
           <div className="space-y-4">
             {recentActivities.map((activity) => (
-              <div
-                key={activity.id}
-                className="flex items-start justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-800"
-              >
-                <div className="flex-1">
+              <div key={activity.id} className="flex items-start justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-800">
+                <div>
                   <p className="text-gray-900 dark:text-white">{activity.message}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                    {activity.time}
-                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{activity.time}</p>
                 </div>
                 {activity.amount && (
-                  <Badge variant="secondary" className="ml-4">
-                    {activity.amount}
-                  </Badge>
+                  <Badge variant="secondary" className="ml-4">{activity.amount}</Badge>
                 )}
               </div>
             ))}
