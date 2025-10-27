@@ -55,15 +55,14 @@ export function Sidebar({
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             {!collapsed && (
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
-                  <Coins className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-yellow-600 dark:text-yellow-400">Gold Lakshmi</h1>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">ERP System</p>
-                </div>
-              </div>
+              <div className="w-full">
+  <img
+    src="assets/logo.png" // 🖼️ replace with your actual image path (e.g., /assets/logo.png or imported logo)
+    alt="Gold Lakshmi Logo"
+    className="w-full h-10 rounded-lg object-cover"
+  />
+</div>
+
             )}
             {collapsed && (
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center mx-auto">
