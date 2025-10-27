@@ -38,6 +38,9 @@ export function CustomerManagement({ selectedBranch }: CustomerManagementProps) 
   const [kycFilter, setKycFilter] = useState('all');
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
+  const [panPreview, setPanPreview] = useState(null);
+  const [aadhaarPreview, setAadhaarPreview] = useState(null);
+
   const customers = [
     {
       id: 'CUST001',
@@ -105,6 +108,15 @@ export function CustomerManagement({ selectedBranch }: CustomerManagementProps) 
     toast.success(`Customer ${name} deleted successfully!`);
   };
 
+  const handleFileChange = (event, type) => {
+    const file = event.target.files[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      if (type === "pan") setPanPreview(url);
+      if (type === "aadhaar") setAadhaarPreview(url);
+    }
+  };
+
   const getKycBadge = (status: string) => {
     const variants: { [key: string]: { variant: any; label: string } } = {
       verified: { variant: 'default', label: 'Verified' },
@@ -161,6 +173,101 @@ export function CustomerManagement({ selectedBranch }: CustomerManagementProps) 
                 <Label htmlFor="address">Address *</Label>
                 <Input id="address" placeholder="Enter complete address" />
               </div>
+
+<div className="space-y-2">
+  <Label htmlFor="nomineeName">Nominee Details *</Label>
+
+  {/* Nominee Full Name */}
+  <Input 
+    id="nomineeName" 
+    placeholder="Enter nominee full name" 
+    className="mb-3"
+  />
+
+  {/* Relationship with Borrower */}
+  <div className="mb-3">
+    <Label htmlFor="relationship">Relationship with Borrower</Label>
+    <select
+      id="relationship"
+      className="w-full mt-1 border border-gray-300 rounded-md p-2 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-200"
+    >
+      <option value="">Select relationship</option>
+      <option value="spouse">Spouse</option>
+      <option value="father">Father</option>
+      <option value="mother">Mother</option>
+      <option value="son">Son</option>
+      <option value="daughter">Daughter</option>
+      <option value="brother">Brother</option>
+      <option value="sister">Sister</option>
+      <option value="other">Other</option>
+    </select>
+  </div>
+
+  {/* Nominee Address */}
+  <div className="mb-3">
+    <Label htmlFor="nomineeAddress">Nominee Address</Label>
+    <textarea
+      id="nomineeAddress"
+      placeholder="Enter full residential address of nominee"
+      rows="3"
+      className="w-full mt-1 border border-gray-300 rounded-md p-2 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-200"
+    ></textarea>
+  </div>
+
+  {/* Relationship Proof Upload */}
+  <div className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
+    <input
+      type="file"
+      id="relationshipProof"
+      accept="image/*,.pdf"
+      className="hidden"
+      onChange={(e) => console.log(e.target.files[0])}
+    />
+    <label htmlFor="relationshipProof" className="cursor-pointer block">
+      <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        Upload Relationship Proof (Photo/PDF)
+      </p>
+    </label>
+  </div>
+
+  {/* Nominee Photo Upload */}
+  <div className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
+    <input
+      type="file"
+      id="nomineePhoto"
+      accept="image/*"
+      capture="environment"
+      className="hidden"
+      onChange={(e) => console.log(e.target.files[0])}
+    />
+    <label htmlFor="nomineePhoto" className="cursor-pointer block">
+      <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        Upload Nominee Photo (or Take Picture)
+      </p>
+    </label>
+  </div>
+
+  {/* Aadhaar Proof Upload */}
+  <div className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
+    <input
+      type="file"
+      id="nomineeAadhaar"
+      accept="image/*,.pdf"
+      className="hidden"
+      onChange={(e) => console.log(e.target.files[0])}
+    />
+    <label htmlFor="nomineeAadhaar" className="cursor-pointer block">
+      <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        Upload Nominee Aadhaar Proof
+      </p>
+    </label>
+  </div>
+</div>
+
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="pan">PAN Number *</Label>
@@ -185,19 +292,94 @@ export function CustomerManagement({ selectedBranch }: CustomerManagementProps) 
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-2">
-                <Label>KYC Documents</Label>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Upload PAN Card</p>
-                  </div>
-                  <div className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Upload Aadhaar</p>
-                  </div>
-                </div>
-              </div>
+              {/* KYC Documents Upload */}
+<div className="space-y-2">
+  <Label>KYC Documents</Label>
+  <div className="grid grid-cols-2 gap-4">
+    {/* PAN Card Upload */}
+    <div
+      className="relative border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
+      onClick={() => document.getElementById("pan-upload").click()}
+    >
+      {panPreview ? (
+        <>
+          <img
+            src={panPreview}
+            alt="PAN Preview"
+            className="w-full h-32 object-cover rounded-md"
+          />
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setPanPreview(null);
+            }}
+            className="absolute top-2 right-2 bg-white dark:bg-gray-700 rounded-full p-1 shadow"
+          >
+            ✕
+          </button>
+        </>
+      ) : (
+        <>
+          <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Upload PAN Card
+          </p>
+        </>
+      )}
+      <input
+        id="pan-upload"
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className="hidden"
+        onChange={(e) => handleFileChange(e, "pan")}
+      />
+    </div>
+
+    {/* Aadhaar Upload */}
+    <div
+      className="relative border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
+      onClick={() => document.getElementById("aadhaar-upload").click()}
+    >
+      {aadhaarPreview ? (
+        <>
+          <img
+            src={aadhaarPreview}
+            alt="Aadhaar Preview"
+            className="w-full h-32 object-cover rounded-md"
+          />
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setAadhaarPreview(null);
+            }}
+            className="absolute top-2 right-2 bg-white dark:bg-gray-700 rounded-full p-1 shadow"
+          >
+            ✕
+          </button>
+        </>
+      ) : (
+        <>
+          <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Upload Aadhaar
+          </p>
+        </>
+      )}
+      <input
+        id="aadhaar-upload"
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className="hidden"
+        onChange={(e) => handleFileChange(e, "aadhaar")}
+      />
+    </div>
+  </div>
+</div>
+
               <div className="flex justify-end gap-3 pt-4">
                 <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
                   Cancel
