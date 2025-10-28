@@ -118,7 +118,7 @@ export default function App() {
         theme === "dark" ? "dark bg-gray-900" : "bg-gray-50"
       }`}
     >
-      <div className="flex h-screen overflow-hidden">
+      <div className="flex h-screen relative overflow-visible z-0">
         <Sidebar
           activeModule={activeModule}
           setActiveModule={setActiveModule}
@@ -128,7 +128,8 @@ export default function App() {
           onCustomerPortal={() => setIsCustomerPortal(true)}
           role={userRole as "admin" | "manager" | "staff"}
         />
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col relative overflow-visible z-10">
+
          <TopBar
   theme={theme}
   toggleTheme={toggleTheme}

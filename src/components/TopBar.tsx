@@ -137,39 +137,51 @@ export function TopBar({
             )}
           </Button>
 
-          {/* User Profile */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white">
-                  {userRole.charAt(0).toUpperCase()}
-                </div>
-                <div className="text-left hidden md:block">
-                  <div className="text-sm capitalize">{userRole}</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    {roleLabel}
-                    {userBranch && userRole !== 'admin' && (
-                      <>
-                        <br />
-                        <span className="text-xs text-gray-400">{userBranchName}</span>
-                      </>
-                    )}
-                  </div>
-                </div>
-                <ChevronDown className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem
-                className="text-red-600"
-                onClick={onLogout}
-              >
-                Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        {/* User Profile */}
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="ghost" className="gap-2">
+      {/* Avatar Circle */}
+      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white">
+        {userRole.charAt(0).toUpperCase()}
+      </div>
+
+      {/* User Info */}
+      <div className="text-left hidden md:block">
+        <div className="text-sm capitalize font-medium">{userRole}</div>
+        <div className="text-xs text-gray-500 dark:text-gray-400">
+          {roleLabel}
+          {/* Show Branch for Manager/Staff */}
+          {userRole !== "admin" && userBranchName && (
+            <>
+              <br />
+              <span className="text-xs text-gray-400">Branch: {userBranchName}</span>
+            </>
+          )}
+        </div>
+      </div>
+
+      <ChevronDown className="w-4 h-4" />
+    </Button>
+  </DropdownMenuTrigger>
+
+  {/* Dropdown Menu Content */}
+  <DropdownMenuContent
+    align="end"
+    sideOffset={10}
+    className="z-[9999] bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700 shadow-lg"
+  >
+    <DropdownMenuItem>Profile</DropdownMenuItem>
+    <DropdownMenuItem>Settings</DropdownMenuItem>
+    <DropdownMenuItem
+      className="text-red-600 focus:bg-red-50 dark:focus:bg-red-950"
+      onClick={onLogout}
+    >
+      Logout
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+
         </div>
       </div>
     </header>
