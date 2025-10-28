@@ -115,10 +115,10 @@ export default function App() {
   return (
     <div
       className={`min-h-screen ${
-        theme === "dark" ? "dark bg-gray-900" : "bg-gray-50"
+        theme === "dark" ? "dark bg-gray-900" : "bg-gray-50 "
       }`}
     >
-      <div className="flex h-screen relative overflow-visible z-0">
+      <div className="flex h-screen">
         <Sidebar
           activeModule={activeModule}
           setActiveModule={setActiveModule}
@@ -128,7 +128,7 @@ export default function App() {
           onCustomerPortal={() => setIsCustomerPortal(true)}
           role={userRole as "admin" | "manager" | "staff"}
         />
-        <div className="flex-1 flex flex-col relative overflow-visible z-10">
+        <div className="flex-1 flex flex-col">
 
          <TopBar
   theme={theme}
@@ -145,7 +145,7 @@ export default function App() {
   }}
 />
 
-          <main className="flex-1 overflow-y-auto">
+          <main className="flex-1 overflow-y-auto relative z-0">
             <div className="p-6">{renderActiveModule()}</div>
           </main>
         </div>

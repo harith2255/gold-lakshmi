@@ -57,8 +57,8 @@ export function TopBar({
   return (
     <header
       className={`${
-        theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-      } border-b px-6 py-3`}
+        theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200 '
+      } border-b px-6 py-3 relative z-[1000]`}
     >
       <div className="flex items-center justify-between">
         {/* Search */}
@@ -97,20 +97,24 @@ export function TopBar({
           )}
 
           {/* Notifications */}
+        
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="relative">
                 <Bell className="w-5 h-5" />
                 {notifications.length > 0 && (
-                  <Badge className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center p-0 bg-red-500">
+                  <Badge className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center p-0 bg-red-500 text-white">
                     {notifications.length}
                   </Badge>
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-80">
+            <DropdownMenuContent 
+              align="end" 
+              className="w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg"
+            >
               {notifications.map((notif) => (
-                <DropdownMenuItem key={notif.id} className="py-3">
+                <DropdownMenuItem key={notif.id} className="py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
                   <div className="flex items-start gap-2">
                     <div
                       className={`w-2 h-2 rounded-full mt-1.5 ${
@@ -169,7 +173,7 @@ export function TopBar({
   <DropdownMenuContent
     align="end"
     sideOffset={10}
-    className="z-[9999] bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700 shadow-lg"
+    className="z-[9999] bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700 shadow-lg "
   >
     <DropdownMenuItem>Profile</DropdownMenuItem>
     <DropdownMenuItem>Settings</DropdownMenuItem>
