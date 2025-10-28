@@ -13,7 +13,7 @@ import {
 } from './ui/select';
 import { Switch } from './ui/switch';
 import { Coins, Building, DollarSign, Mail, MessageSquare, Bell } from 'lucide-react';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 export function Settings() {
   const [goldRate, setGoldRate] = useState(6250);

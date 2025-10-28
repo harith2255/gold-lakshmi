@@ -27,7 +27,7 @@ import {
 } from './ui/select';
 import { Badge } from './ui/badge';
 import { UserPlus, Search, Filter, Edit, Trash2, Eye, Upload } from 'lucide-react';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 interface CustomerManagementProps {
   selectedBranch: string;
@@ -38,8 +38,8 @@ export function CustomerManagement({ selectedBranch }: CustomerManagementProps) 
   const [kycFilter, setKycFilter] = useState('all');
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
-  const [panPreview, setPanPreview] = useState(null);
-  const [aadhaarPreview, setAadhaarPreview] = useState(null);
+  const [panPreview, setPanPreview] = useState<string | null>(null);
+  const [aadhaarPreview, setAadhaarPreview] = useState<string | null>(null);
 
   const customers = [
     {
@@ -108,14 +108,18 @@ export function CustomerManagement({ selectedBranch }: CustomerManagementProps) 
     toast.success(`Customer ${name} deleted successfully!`);
   };
 
-  const handleFileChange = (event, type) => {
-    const file = event.target.files[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      if (type === "pan") setPanPreview(url);
-      if (type === "aadhaar") setAadhaarPreview(url);
-    }
-  };
+  const handleFileChange = (
+  event: React.ChangeEvent<HTMLInputElement>,
+  type: "pan" | "aadhaar"
+) => {
+  const file = event.target.files?.[0];
+  if (file) {
+    const url = URL.createObjectURL(file);
+    if (type === "pan") setPanPreview(url);
+    if (type === "aadhaar") setAadhaarPreview(url);
+  }
+};
+
 
   const getKycBadge = (status: string) => {
     const variants: { [key: string]: { variant: any; label: string } } = {
@@ -209,8 +213,7 @@ export function CustomerManagement({ selectedBranch }: CustomerManagementProps) 
     <textarea
       id="nomineeAddress"
       placeholder="Enter full residential address of nominee"
-      rows="3"
-      className="w-full mt-1 border border-gray-300 rounded-md p-2 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-200"
+      rows={3}      className="w-full mt-1 border border-gray-300 rounded-md p-2 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-200"
     ></textarea>
   </div>
 
@@ -221,7 +224,7 @@ export function CustomerManagement({ selectedBranch }: CustomerManagementProps) 
       id="relationshipProof"
       accept="image/*,.pdf"
       className="hidden"
-      onChange={(e) => console.log(e.target.files[0])}
+      onChange={(e) =>e.target.files && console.log(e.target.files[0])}
     />
     <label htmlFor="relationshipProof" className="cursor-pointer block">
       <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
@@ -239,7 +242,7 @@ export function CustomerManagement({ selectedBranch }: CustomerManagementProps) 
       accept="image/*"
       capture="environment"
       className="hidden"
-      onChange={(e) => console.log(e.target.files[0])}
+      onChange={(e) =>e.target.files && console.log(e.target.files[0])}
     />
     <label htmlFor="nomineePhoto" className="cursor-pointer block">
       <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
@@ -256,7 +259,7 @@ export function CustomerManagement({ selectedBranch }: CustomerManagementProps) 
       id="nomineeAadhaar"
       accept="image/*,.pdf"
       className="hidden"
-      onChange={(e) => console.log(e.target.files[0])}
+      onChange={(e) =>e.target.files && console.log(e.target.files[0])}
     />
     <label htmlFor="nomineeAadhaar" className="cursor-pointer block">
       <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
@@ -299,7 +302,7 @@ export function CustomerManagement({ selectedBranch }: CustomerManagementProps) 
     {/* PAN Card Upload */}
     <div
       className="relative border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
-      onClick={() => document.getElementById("pan-upload").click()}
+      onClick={() => document.getElementById("pan-upload")?.click()}
     >
       {panPreview ? (
         <>
@@ -340,7 +343,7 @@ export function CustomerManagement({ selectedBranch }: CustomerManagementProps) 
     {/* Aadhaar Upload */}
     <div
       className="relative border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
-      onClick={() => document.getElementById("aadhaar-upload").click()}
+      onClick={() => document.getElementById("aadhaar-upload")?.click()}
     >
       {aadhaarPreview ? (
         <>

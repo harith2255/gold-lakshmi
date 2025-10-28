@@ -22,6 +22,7 @@ interface SidebarProps {
   setCollapsed: (collapsed: boolean) => void;
   theme: 'light' | 'dark';
   onCustomerPortal: () => void;
+  role: 'admin' | 'manager' | 'staff' | 'customer'; // 👈 add this
 }
 
 export function Sidebar({
@@ -31,8 +32,10 @@ export function Sidebar({
   setCollapsed,
   theme,
   onCustomerPortal,
+  role,
 }: SidebarProps) {
-  const menuItems = [
+  // Full menu list
+  const allMenuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'customers', label: 'Customers', icon: Users },
     { id: 'gold-valuation', label: 'Gold Valuation', icon: Coins },
@@ -43,6 +46,18 @@ export function Sidebar({
     { id: 'users', label: 'User Management', icon: UserCog },
     { id: 'settings', label: 'Settings', icon: SettingsIcon },
   ];
+
+  // Role-based filtering logic
+  const roleAccess: Record<string, string[]> = {
+    admin: allMenuItems.map((item) => item.id),
+    manager: ['dashboard', 'payments', 'auctions', 'reports'],
+    staff: ['dashboard', 'customers', 'gold-valuation', 'loans'],
+    customer: ['dashboard'], // or whatever you want
+  };
+
+  const menuItems = allMenuItems.filter((item) =>
+    roleAccess[role]?.includes(item.id)
+  );
 
   return (
     <aside
@@ -56,13 +71,12 @@ export function Sidebar({
           <div className="flex items-center justify-between">
             {!collapsed && (
               <div className="w-full">
-  <img
-    src="assets/logo.png" // 🖼️ replace with your actual image path (e.g., /assets/logo.png or imported logo)
-    alt="Gold Lakshmi Logo"
-    className="w-full h-10 rounded-lg object-cover"
-  />
-</div>
-
+                <img
+                  src="assets/logo.png"
+                  alt="Gold Lakshmi Logo"
+                  className="w-full h-10 rounded-lg object-cover"
+                />
+              </div>
             )}
             {collapsed && (
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center mx-auto">

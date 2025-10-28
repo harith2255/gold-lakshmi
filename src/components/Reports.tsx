@@ -26,7 +26,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { Download, FileText, TrendingUp, Calendar } from 'lucide-react';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 interface ReportsProps {
   selectedBranch: string;

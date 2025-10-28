@@ -57,8 +57,8 @@ export function Dashboard({ selectedBranch }: DashboardProps) {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isNewLoanDialogOpen, setIsNewLoanDialogOpen] = useState(false);
 
-const [panPreview, setPanPreview] = useState(null);
-  const [aadhaarPreview, setAadhaarPreview] = useState(null);
+const [panPreview, setPanPreview] = useState<string | null>(null);
+  const [aadhaarPreview, setAadhaarPreview] = useState<string | null>(null);
 
   // 👇 Dummy Add Customer Function
   const handleAddCustomer = () => {
@@ -71,14 +71,18 @@ const [panPreview, setPanPreview] = useState(null);
       setIsNewLoanDialogOpen(false);
     };
 
-    const handleFileChange = (event, type) => {
-    const file = event.target.files[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      if (type === "pan") setPanPreview(url);
-      if (type === "aadhaar") setAadhaarPreview(url);
-    }
-  };
+ const handleFileChange = (
+  event: React.ChangeEvent<HTMLInputElement>,
+  type: "pan" | "aadhaar"
+) => {
+  const file = event.target.files?.[0];
+  if (file) {
+    const url = URL.createObjectURL(file);
+    if (type === "pan") setPanPreview(url);
+    if (type === "aadhaar") setAadhaarPreview(url);
+  }
+};
+
 
   const kpiData = [
     { title: 'Active Loans', value: '1,247', change: '+12.5%', trend: 'up', icon: FileText, color: 'blue' },
@@ -211,7 +215,7 @@ const [panPreview, setPanPreview] = useState(null);
     <textarea
       id="nomineeAddress"
       placeholder="Enter full residential address of nominee"
-      rows="3"
+      rows={3}
       className="w-full mt-1 border border-gray-300 rounded-md p-2 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-200"
     ></textarea>
   </div>
@@ -223,7 +227,7 @@ const [panPreview, setPanPreview] = useState(null);
       id="relationshipProof"
       accept="image/*,.pdf"
       className="hidden"
-      onChange={(e) => console.log(e.target.files[0])}
+      onChange={(e) =>e.target.files && console.log(e.target.files[0])}
     />
     <label htmlFor="relationshipProof" className="cursor-pointer block">
       <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
@@ -241,7 +245,7 @@ const [panPreview, setPanPreview] = useState(null);
       accept="image/*"
       capture="environment"
       className="hidden"
-      onChange={(e) => console.log(e.target.files[0])}
+      onChange={(e) => e.target.files && console.log(e.target.files[0])}
     />
     <label htmlFor="nomineePhoto" className="cursor-pointer block">
       <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
@@ -258,7 +262,7 @@ const [panPreview, setPanPreview] = useState(null);
       id="nomineeAadhaar"
       accept="image/*,.pdf"
       className="hidden"
-      onChange={(e) => console.log(e.target.files[0])}
+      onChange={(e) =>e.target.files && console.log(e.target.files[0])}
     />
     <label htmlFor="nomineeAadhaar" className="cursor-pointer block">
       <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
@@ -304,7 +308,7 @@ const [panPreview, setPanPreview] = useState(null);
     {/* PAN Card Upload */}
     <div
       className="relative border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
-      onClick={() => document.getElementById("pan-upload").click()}
+      onClick={() => document.getElementById("pan-upload")?.click()}
     >
       {panPreview ? (
         <>
@@ -345,7 +349,7 @@ const [panPreview, setPanPreview] = useState(null);
     {/* Aadhaar Upload */}
     <div
       className="relative border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
-      onClick={() => document.getElementById("aadhaar-upload").click()}
+      onClick={() => document.getElementById("aadhaar-upload")?.click()}
     >
       {aadhaarPreview ? (
         <>
