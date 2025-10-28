@@ -1,10 +1,11 @@
+// ...existing code...
 import React, { useState } from "react";
 
-export const AdminLogin = ({
-  onLogin,
-}: {
+interface AdminLoginProps {
   onLogin: (role: "admin" | "manager" | "staff") => void;
-}) => {
+}
+
+export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -17,9 +18,12 @@ export const AdminLogin = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email || !password) return alert("Please enter credentials.");
+    if (!email || !password) {
+      alert("Please enter your credentials.");
+      return;
+    }
 
-    const role = userRoles[email];
+    const role = userRoles[email.trim().toLowerCase()];
     if (role) {
       onLogin(role);
     } else {
@@ -28,11 +32,11 @@ export const AdminLogin = ({
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-      <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-sm">
-        <h1 className="text-2xl font-semibold text-center text-gray-800 dark:text-gray-100 mb-6">
-          ERP Login
-        </h1>
+    <div className="min-h-screen  flex items-center justify-center   p-4">
+      <div className="bg-white  border px-4 py-4 rounded-xl  shadow-2xl w-full max-w-md ">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">ERP ADMIN LOGIN</h1>
+        </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm text-gray-700 dark:text-gray-300">
@@ -64,12 +68,13 @@ export const AdminLogin = ({
 
           <button
             type="submit"
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg"
+            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg mt-2"
           >
             Sign In
           </button>
         </form>
       </div>
     </div>
-  );
+  )
 };
+

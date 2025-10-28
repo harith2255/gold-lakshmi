@@ -79,8 +79,12 @@ export function Sidebar({
               </div>
             )}
             {collapsed && (
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center mx-auto">
-                <Coins className="w-6 h-6 text-white" />
+              <div className="flex items-center justify-center w-full">
+                <img
+                  src="assets/small-logo.png"
+                  alt="Gold Lakshmi Icon"
+                  className="w-10 h-10 rounded-lg object-cover"
+                />
               </div>
             )}
           </div>
@@ -115,7 +119,7 @@ export function Sidebar({
         </nav>
 
         {/* Customer Portal Button */}
-        <div className="p-3 border-t border-gray-200 dark:border-gray-700">
+        {/* <div className="p-3 border-t border-gray-200 dark:border-gray-700">
           <Button
             onClick={onCustomerPortal}
             variant="outline"
@@ -125,7 +129,7 @@ export function Sidebar({
             <Globe className={`${collapsed ? 'w-5 h-5' : 'w-4 h-4 mr-2'}`} />
             {!collapsed && 'Customer Portal'}
           </Button>
-        </div>
+        </div> */}
 
         {/* Collapse Toggle */}
         <div className="p-3 border-t border-gray-200 dark:border-gray-700">
