@@ -22,17 +22,38 @@ export default function App() {
   const [isCustomerPortal, setIsCustomerPortal] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState<"admin" | "manager" | "staff" | null>(null);
-  const [userBranch, setUserBranch] = useState<string>(""); // <-- track manager branch
+  const [userBranch, setUserBranch] = useState<string>("");
 
-  const toggleTheme = () =>
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  const toggleTheme = () => setTheme((prev) => (prev === "light" ? "dark" : "light"));
 
-  // simulate login assigning role and branch
+  // Simulated login with role + branch
   const handleLogin = (role: "admin" | "manager" | "staff", branch?: string) => {
     setUserRole(role);
     setUserBranch(branch || "all");
     setIsLoggedIn(true);
   };
+
+  // Define role-based access for modules
+  const roleAccess: Record<"admin" | "manager" | "staff", string[]> = {
+    admin: [
+      "dashboard",
+      "customers",
+      "gold-valuation",
+      "loans",
+      "payments",
+      "auctions",
+      "reports",
+      "users",
+      "settings",
+    ],
+    manager: ["dashboard", "payments", "auctions", "reports"],
+    staff: ["dashboard", "customers", "gold-valuation"],
+  };
+
+  // Ensure current activeModule is accessible, else reset to dashboard
+  if (userRole && !roleAccess[userRole].includes(activeModule)) {
+    setActiveModule("dashboard");
+  }
 
   const renderActiveModule = () => {
     if (isCustomerPortal)
@@ -42,46 +63,45 @@ export default function App() {
       case "dashboard":
         return <Dashboard selectedBranch={selectedBranch} />;
 
-      // Admin full access
-      case "users":
-        return userRole === "admin" ? <UserManagement /> : <AccessDenied />;
-
-      case "settings":
-        return userRole === "admin" ? <Settings /> : <AccessDenied />;
-
-      // Manager access: only reports and loans
-      case "loans":
-      case "reports":
-        return userRole !== "staff" ? (
-          activeModule === "loans" ? (
-            <LoanManagement selectedBranch={selectedBranch} />
-          ) : (
-            <Reports selectedBranch={selectedBranch} />
-          )
-        ) : (
-          <AccessDenied />
-        );
-
-      // Staff access: customers + gold valuation
       case "customers":
         return <CustomerManagement selectedBranch={selectedBranch} />;
+
       case "gold-valuation":
         return <GoldValuation />;
 
-      // Payment & Auction Access Control
+      case "loans":
+        return userRole === "admin" ? (
+          <LoanManagement selectedBranch={selectedBranch} />
+        ) : (
+          <Dashboard selectedBranch={selectedBranch} />
+        );
+
       case "payments":
         if (userRole === "admin")
           return <PaymentManagement selectedBranch="all" />;
         if (userRole === "manager")
           return <PaymentManagement selectedBranch={userBranch} />;
-        return <AccessDenied />;
+        return <Dashboard selectedBranch={selectedBranch} />;
 
       case "auctions":
         if (userRole === "admin")
           return <AuctionManagement selectedBranch="all" />;
         if (userRole === "manager")
           return <AuctionManagement selectedBranch={userBranch} />;
-        return <AccessDenied />;
+        return <Dashboard selectedBranch={selectedBranch} />;
+
+      case "reports":
+        return userRole !== "staff" ? (
+          <Reports selectedBranch={selectedBranch} />
+        ) : (
+          <Dashboard selectedBranch={selectedBranch} />
+        );
+
+      case "users":
+        return userRole === "admin" ? <UserManagement /> : <Dashboard selectedBranch={selectedBranch} />;
+
+      case "settings":
+        return userRole === "admin" ? <Settings /> : <Dashboard selectedBranch={selectedBranch} />;
 
       default:
         return <Dashboard selectedBranch={selectedBranch} />;
@@ -89,8 +109,6 @@ export default function App() {
   };
 
   if (!isLoggedIn) {
-    // Example login usage:
-    // onLogin("manager", "chennai") or onLogin("admin")
     return <AdminLogin onLogin={handleLogin} />;
   }
 
@@ -108,15 +126,24 @@ export default function App() {
           setCollapsed={setSidebarCollapsed}
           theme={theme}
           onCustomerPortal={() => setIsCustomerPortal(true)}
-          role={userRole}
+          role={userRole as "admin" | "manager" | "staff"}
         />
         <div className="flex-1 flex flex-col overflow-hidden">
-          <TopBar
-            theme={theme}
-            toggleTheme={toggleTheme}
-            selectedBranch={selectedBranch}
-            setSelectedBranch={setSelectedBranch}
-          />
+         <TopBar
+  theme={theme}
+  toggleTheme={toggleTheme}
+  selectedBranch={selectedBranch}
+  setSelectedBranch={setSelectedBranch}
+  userRole={userRole as 'admin' | 'manager' | 'staff'}
+  userBranch={userBranch}
+  onLogout={() => {
+    setIsLoggedIn(false);
+    setUserRole(null);
+    setUserBranch('');
+    setActiveModule('dashboard');
+  }}
+/>
+
           <main className="flex-1 overflow-y-auto">
             <div className="p-6">{renderActiveModule()}</div>
           </main>
@@ -126,10 +153,3 @@ export default function App() {
     </div>
   );
 }
-
-const AccessDenied = () => (
-  <div className="flex flex-col items-center justify-center h-full text-gray-500">
-    <p className="text-lg font-semibold">Access Denied</p>
-    <p className="text-sm">You don’t have permission to view this section.</p>
-  </div>
-);

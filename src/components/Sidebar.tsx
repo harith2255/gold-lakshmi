@@ -22,7 +22,7 @@ interface SidebarProps {
   setCollapsed: (collapsed: boolean) => void;
   theme: 'light' | 'dark';
   onCustomerPortal: () => void;
-  role: 'admin' | 'manager' | 'staff' | 'customer'; // 👈 add this
+  role: 'admin' | 'manager' | 'staff' ;
 }
 
 export function Sidebar({
@@ -34,7 +34,6 @@ export function Sidebar({
   onCustomerPortal,
   role,
 }: SidebarProps) {
-  // Full menu list
   const allMenuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'customers', label: 'Customers', icon: Users },
@@ -47,14 +46,15 @@ export function Sidebar({
     { id: 'settings', label: 'Settings', icon: SettingsIcon },
   ];
 
-  // Role-based filtering logic
+  // ✅ Define role-based access
   const roleAccess: Record<string, string[]> = {
-    admin: allMenuItems.map((item) => item.id),
-    manager: ['dashboard', 'payments', 'auctions', 'reports'],
-    staff: ['dashboard', 'customers', 'gold-valuation', 'loans'],
-    customer: ['dashboard'], // or whatever you want
+    admin: allMenuItems.map((item) => item.id), // all access
+    manager: ['dashboard', 'payments', 'auctions', 'reports'], // branch only
+    staff: ['dashboard', 'customers', 'gold-valuation'], // limited access
+  
   };
 
+  // ✅ Filter the sidebar menu based on role
   const menuItems = allMenuItems.filter((item) =>
     roleAccess[role]?.includes(item.id)
   );
@@ -69,16 +69,13 @@ export function Sidebar({
         {/* Logo */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
-            {!collapsed && (
-              <div className="w-full">
-                <img
-                  src="assets/logo.png"
-                  alt="Gold Lakshmi Logo"
-                  className="w-full h-10 rounded-lg object-cover"
-                />
-              </div>
-            )}
-            {collapsed && (
+            {!collapsed ? (
+              <img
+                src="assets/logo.png"
+                alt="Gold Lakshmi Logo"
+                className="w-full h-10 rounded-lg object-cover"
+              />
+            ) : (
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center mx-auto">
                 <Coins className="w-6 h-6 text-white" />
               </div>
@@ -105,7 +102,7 @@ export function Sidebar({
                     } ${collapsed ? 'justify-center' : ''}`}
                     title={collapsed ? item.label : ''}
                   >
-                    <Icon className={`${collapsed ? 'w-5 h-5' : 'w-5 h-5'} flex-shrink-0`} />
+                    <Icon className="w-5 h-5 flex-shrink-0" />
                     {!collapsed && <span className="text-sm">{item.label}</span>}
                   </button>
                 </li>
@@ -114,26 +111,10 @@ export function Sidebar({
           </ul>
         </nav>
 
-        {/* Customer Portal Button */}
-        <div className="p-3 border-t border-gray-200 dark:border-gray-700">
-          <Button
-            onClick={onCustomerPortal}
-            variant="outline"
-            className={`w-full ${collapsed ? 'px-0' : ''}`}
-            title={collapsed ? 'Customer Portal' : ''}
-          >
-            <Globe className={`${collapsed ? 'w-5 h-5' : 'w-4 h-4 mr-2'}`} />
-            {!collapsed && 'Customer Portal'}
-          </Button>
-        </div>
 
         {/* Collapse Toggle */}
         <div className="p-3 border-t border-gray-200 dark:border-gray-700">
-          <Button
-            onClick={() => setCollapsed(!collapsed)}
-            variant="ghost"
-            className="w-full"
-          >
+          <Button onClick={() => setCollapsed(!collapsed)} variant="ghost" className="w-full">
             {collapsed ? (
               <ChevronRight className="w-5 h-5" />
             ) : (
